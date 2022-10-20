@@ -1,16 +1,8 @@
-function matchCount(srt, param1, param2) {
-    let count = 0;
-
-    for(let i = 0; i < srt.length; i++) {
-        if (srt[i] == param1 &&  srt[i + 1] == param2){
-            count++;
-        }
-    }
-    return count
+function matchCount(str, param1, param2) {
+    return result = [...str.matchAll(RegExp(`${param1}${param2}`, 'g'))].length;
 };
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/matchAll
-// робота з стрічками 
 
 console.log('Task 1:', matchCount('ab___ab__', 'a', 'b'));
 console.log('Task 1:', matchCount('sdfab__sss__ds', 'a', 'b'));
@@ -19,38 +11,14 @@ console.log('Task 1:', matchCount('sdfab__sss__ds', 'a', 'b'));
 
 function indexCount(str, valueA, valueB) {
 
-    // let  paramA = -1;
-    // let paramB = -1;
-
-    // for(let i = 0; i < str.length; i++) {
-    //     if ((str[i] == valueA) && (str.length > 0)) {
-    //         paramA = str.lastIndexOf(valueA)
-    //     }
-    //     if ((str[i] == valueB) && (str.length > 0)) {
-    //         paramB = str.lastIndexOf(valueB)
-    //     }
-    // }
-
-    // if (paramA != -1) {
-    //     if (paramB == -1) {
-    //         return paramA;
-    //     }
-    //     else {
-    //         return Math.max(paramA, paramB);
-    //     }
-    // }
-
-    // if (paramB != -1) {
-    //     return paramB;
-    // }
-    // else {
-    //     return -1;
-    // }
+    if(str){
+        let a = str.lastIndexOf(valueA);
+        let b = str.lastIndexOf(valueB);
     
-    let a = str.lastIndexOf(valueA);
-    let b = str.lastIndexOf(valueB);
-
-    return Math.max(a, b)
+        return Math.max(a, b)
+    } else {
+        return -1
+    }
 
 }
 
