@@ -20,20 +20,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4abee1fc-a812-4dbe-be69-19f2300eb586" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/js-practive/backend/errors/user.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js-practive/backend/handlers/user-handler.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js-practive/backend/models/user.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js-practive/backend/models/users-list.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js-practive/css/theme.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js-practive/css/theme.less" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js-practive/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js-practive/js/jquery-3.1.1.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js-practive/js/main.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js-practive/readme.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js-practive/resources/data.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js-practive/resources/data.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js-practive/server.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +58,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1666981215406</updated>
-      <workItem from="1666981216636" duration="791000" />
+      <workItem from="1666981216636" duration="911000" />
     </task>
     <servers />
   </component>
