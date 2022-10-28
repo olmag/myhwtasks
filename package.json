@@ -1,0 +1,21 @@
+{
+  "name": "myhmtasks",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "cd js-practive && node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "jquery": "^3.1.1",
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "node-static": "^0.7.8",
+    "node-uuid": "^1.4.7"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}
