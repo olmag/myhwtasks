@@ -29,11 +29,39 @@ function getUsers(){
 }
 
 function showUsersList(usersList) {
-    // usersList.forEach((user) =>{
-    //     renderUserHTM(user);
-    // })
     const html = usersList.map(generateUserHTML).join('');
     usersTable.innerHTML = html;
+}
+
+function saveUserInfo() {
+
+    const user = getUser()
+
+    if (user.id){
+        fetch(`/user?id=${user.id}` , {
+            method: 'PUT',
+            body: JSON.stringify(user)
+        })
+        .then((res)=>{
+            if (res.ok){
+                renderUserHTM(user)
+                clearForm()
+                toggleCreateTable()
+            }
+        });
+    } else {
+        fetch('/user', {
+            method: 'POST',
+            body: JSON.stringify(user),
+        })
+        .then((res)=>{
+            if (res.ok){
+                renderUserHTM(user)
+                clearForm()
+                toggleCreateTable()
+            }
+        });
+    }
 }
 
 function renderUserHTM(user) {
@@ -59,9 +87,12 @@ function generateUserHTML(user) {
     `
 }
 
-function saveUserInfo() {
+function getUser() {
     
-    const newUser = {
+    const user = usersList.find(userValue => userValue.id === addForm.elements['id'].value)
+
+    return {
+        ...user,
         fullName: addForm.elements['fullname'].value,
 		birthday: addForm.elements['birthday'].value,
 		profession: addForm.elements['profession'].value,
@@ -70,18 +101,6 @@ function saveUserInfo() {
 		shortInfo: addForm.elements['short-info'].value,
 		fullInfo: addForm.elements['full-info'].value, 
     }
-    
-    fetch('/user', {
-        method: 'POST',
-        body: newUser,
-    })
-    .then((user)=>{
-        if (user.ok){
-            renderUserHTM(newUser)
-            clearForm()
-            toggleCreateTable()
-        }
-    });
 }
 
 function cancelForm() {
@@ -90,18 +109,21 @@ function cancelForm() {
 }
 
 function onUsersTableClick(e) {
-    const user = getUser(e.target);
+    const user = getUserBySelector(e.target);
     const id = user.dataset.id;
 
     if (user) {
         if (e.target.classList.contains(EDIT_BTN_CLASS)) {
-            editUser(id);
-            return;
+            toggleCreateTable()
+            getSingleUser(id)
+                .then((user) => {
+                    changeUser(user)
+                })
         }
         if (e.target.classList.contains(DELETE_BTN_CLASS)) {
             deleteUser(id)
                 .then(() => {
-                    const userById = usersList.findIndex(user => user.id === id)
+                    const userById = usersList.findIndex(user => user.id === id) || {}
                     usersList.splice(userById, 1);
                 })
                 .then(() => {
@@ -115,15 +137,24 @@ function onUsersTableClick(e) {
     }
 }
 
-function editUser(userId) {
-    return fetch(`/user?id=${userId}` , {
-        method: 'DELETE',
-    })
-    .then(res => {
-        return res.ok;
-    });
+function changeUser(user){
+    addForm.elements['id'].value = user.id
+    addForm.elements['fullname'].value = user.fullName
+    addForm.elements['birthday'].value = user.birthday
+    addForm.elements['profession'].value = user.profession
+    addForm.elements['address'].value = user.address
+    addForm.elements['short-info'].value = user.shortInfo
+    addForm.elements['full-info'].value = user.fullInfo
 }
 
+function getSingleUser(userId) {
+    return fetch(`/user?id=${userId}`, {
+        method: 'GET',
+    })
+    .then(res => {
+        return res.json();
+    })
+}
 
 function deleteUser(userId) {
     return fetch(`/user?id=${userId}` , {
@@ -134,7 +165,17 @@ function deleteUser(userId) {
     });
 }
 
-function getUser(el) {
+// function updateUser(userId, changas) {
+//     fetch(`/user?id=${userId}` , {
+//         method: 'PUT',
+//         body: JSON.stringify(changas)
+//     })
+//     .then(res => {
+//         return res.ok;
+//     });
+// }
+
+function getUserBySelector(el) {
     return el.closest(USER_SELECTOR);
 }
 
@@ -148,12 +189,6 @@ function clearForm() {
 
 function clearHTML() {
     let tableRows = usersTable.getElementsByTagName('tr');
-    // let rowCount = tableRows.length;
-
-    //  (let i = rowCount ; i > 0; i-- ) {
-    //     console.log(tableRows[i])
-    //     usersTable.removeChild(tableRows[i])
-    // }
     do {
         usersTable.removeChild(tableRows[0])
     } while (tableRows[0])
