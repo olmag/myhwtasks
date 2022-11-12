@@ -31,12 +31,22 @@ NOTE: **AS task is reletively time comsuming you can not implemnet all fatures(b
 
 NOTE: **no need to rewrite styles, improve view or any other cases, but if you have time and passion you can :)** 
 
+### Next iteration (task 2)
+Now it's time for changing/improving our app 😎
+Your task is 
+1. Instead of editing user on modal you have to implement separate page where your users will be able to edit data for each user. 
+    - How page will look like ? It's up to you.
+    - You have to keep the same fields like in modal
+2. Your new page have to has button to navigate user back. 
+3. In case of closing tab on editing page user has to be able restor work after entering app again. 
+    - TIP: you have to store data permanently and recover from it on next time user resore session only in case CHANGE WERE NOT SAVED (like in draft mode˚)
+
 ## API description (in case you use server)
 
 **Get list of users:** _GET /user_
 **Get single user:** _GET /user?id=user-id_
 **Get list of countries:** _GET /countries_
-**Update single user:** _PUT /user?id=user-id - body the same as for POST_
+**Update single user:** _PUT /user - body the same as for POST_(!!! important to provide id in body)
 **Create new user:** _POST /user_
 `Body
 
