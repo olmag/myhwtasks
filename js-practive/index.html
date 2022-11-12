@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>DOM && BOM 🙌.</title>
-    <link rel="stylesheet" href="/css/theme.css">
+    <link rel="stylesheet" href="./css/theme.css">
 
 </head>
 <body>
-<form action="/user" name="users-edit" class="users-edit users-edit-hidden" method="POST">
+<form id="users-edit" class="users-edit users-edit-hidden">
     <h2>Create/Edit user</h2>
-
+    
     <input type="hidden" name="id" id="id">
     <div class="field-row">
         <label for="fullname">First name:</label>
@@ -39,25 +39,34 @@
         <label for="full-info">DetailedInfo:</label>
         <textarea name="full-info" id="full-info"></textarea>
     </div>
-    <button class="btn btn-save" id="saveBnt">
+    <button type="button" class="btn btn-save" id="saveBnt">
         Save changes
     </button>
     <button type="button" class="btn btn-cancel" id="cancel">Cancel</button>
 </form>
-<h2 style="text-align: center;"><span style="text-transform: uppercase;">Users list</span> <button class="btn btn-new" id="create">Create user</button></h2>
+<h2 style="text-align: center;">
+    <span style="text-transform: uppercase;">Users list</span> 
+    <button class="btn btn-new" id="create">Create user</button>
+</h2>
 
 <div id="details"></div>
 <table id="users-table">
-    <tr>
-        <th>Full name</th>
-        <th>Profession</th>
-        <th>Short info</th>
-        <th>Options</th>
-    </tr>
+    <thead>
+        <tr>
+            <th>Full name</th>
+            <th>Profession</th>
+            <th>Short info</th>
+            <th>Options</th>
+        </tr>
+    </thead>
+    <tbody id="users-table-list">
+
+    </tbody>
+    
 
 </table>
 
-<script src="/js/jquery-3.1.1.min.js"></script>
-<script src="/js/main.js"></script>
+<script src="./js/jquery-3.1.1.min.js"></script>
+<script src="./js/main.js"></script>
 </body>
 </html>
