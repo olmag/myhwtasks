@@ -1,76 +1,83 @@
-const USER_SELECTOR = '.user';
-const EDIT_BTN_CLASS = 'editBtn';
-const DELETE_BTN_CLASS = 'deleteBtn';
+// console.log(event)
+    // 1.очищення всієї сторінки 
+    // 2.умови, що знаходяться в хещі та їх валідація (асинхронний запит який вибудовує сторінку) (вбудувати сторінку )
+let usersTable
+let createButton
+let userForm 
 
-const usersTable = document.getElementById('users-table-list');
-const editButton = document.getElementById('create');
-const addForm = document.getElementById('users-edit')
-const saveButton = document.getElementById('saveBnt')
-const cancelButton = document.getElementById('cancel')
+setUsersTable()
+setHtmlElementUserForm()
 
-let usersList;
+function setUsersTable() {
+    usersTable = document.getElementById('users-table-list');
+    createButton = document.getElementById('create');
 
-getUsers()
+    createButton.addEventListener('click', goToUserForm);
+    usersTable.addEventListener('click', onUsersTableClick);
+}
 
-editButton.addEventListener('click', toggleCreateTable)
-saveButton.addEventListener('click', saveUserInfo)
-cancelButton.addEventListener('click', cancelForm)
-usersTable.addEventListener('click', onUsersTableClick )
+function setHtmlElementUserForm() {
+    userForm = document.getElementById('users-edit');
+    userForm.addEventListener('click', onUserFormClick);
+}
+
+readingHashState();
+
+function readingHashState() {
+    addEventListener('popstate', (event) => {
+            
+        switch (location.hash.split("=")[0]) {
+            case '#user-form': {
+                if (window.location.hash.split("=")[1]) {
+                    fetch('/user-form.html')
+                    .then((res) => res.text())
+                    .then((stringHtml) => document.body.innerHTML = stringHtml)
+                    .then(() => getSingleUser(window.location.hash.split("=")[1]))
+                    .then((user) => {
+                        setHtmlElementUserForm()
+                        setUserData(user)
+                    })
+    
+                } else {
+                    fetch('/user-form.html')
+                    .then((res) => res.text())
+                    .then((stringHtml) => document.body.innerHTML = stringHtml)
+                    .then(() => setHtmlElementUserForm())
+                    .then(() => {
+                        if(getDataOnLocalStorage()) {
+                            setUserData(getDataOnLocalStorage())
+                        }
+                    })
+                }            
+                break
+            }
+            case '': {
+                fetch('')
+                .then((res) => res.text())
+                .then((stringHtml) => document.body.innerHTML = stringHtml)
+                .then(() => {
+                    setUsersTable()
+                    getUsers()
+                });
+            }
+        }
+     });
+}
 
 function getUsers(){
     fetch('/user')
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-        usersList = data
-        showUsersList(usersList);
-    });
+    .then((response) =>  response.json())
+    .then(showUsersList)
 }
 
-function showUsersList(usersList) {
-    const html = usersList.map(generateUserHTML).join('');
+getUsers()
+
+function showUsersList(data) {
+    const html = data.map(generateUserHTML).join('');
     usersTable.innerHTML = html;
 }
 
-function saveUserInfo() {
-
-    const user = getUser()
-
-    if (user.id){
-        fetch(`/user?id=${user.id}` , {
-            method: 'PUT',
-            body: JSON.stringify(user)
-        })
-        .then((res)=>{
-            if (res.ok){
-                renderUserHTM(user)
-                clearForm()
-                toggleCreateTable()
-            }
-        });
-    } else {
-        fetch('/user', {
-            method: 'POST',
-            body: JSON.stringify(user),
-        })
-        .then((res)=>{
-            if (res.ok){
-                renderUserHTM(user)
-                clearForm()
-                toggleCreateTable()
-            }
-        });
-    }
-}
-
-function renderUserHTM(user) {
-    const userValueRenderHtml = generateUserHTML(user);
-
-    usersTable.insertAdjacentHTML("beforeend", userValueRenderHtml);
-}
-
-function generateUserHTML(user) {    
+function generateUserHTML(user) {     
     return `
     <tr 
         class="user"
@@ -87,25 +94,84 @@ function generateUserHTML(user) {
     `
 }
 
-function getUser() {
-    
-    const user = usersList.find(userValue => userValue.id === addForm.elements['id'].value)
-
-    return {
-        ...user,
-        fullName: addForm.elements['fullname'].value,
-		birthday: addForm.elements['birthday'].value,
-		profession: addForm.elements['profession'].value,
-		address: addForm.elements['address'].value,
-		country: addForm.elements['country'].value,
-		shortInfo: addForm.elements['short-info'].value,
-		fullInfo: addForm.elements['full-info'].value, 
+function goToUserForm(id) {
+    if(typeof(id) === 'string') {
+        location.hash = 'user-form=' + id;
+    } else {
+        location.hash = 'user-form';
     }
 }
 
-function cancelForm() {
-    clearForm()
-    toggleCreateTable()
+function onUserFormClick(e){
+    if (e.target.classList.contains('btn-cancel')){
+        const user = getUserFromForm()
+        setDataOnLocalStorage(user)
+        goToTable()
+    } else if (e.target.classList.contains('btn-save')){
+        saveUserInfo()
+    }
+}
+
+function goToTable() {
+    history.back()
+}
+
+function saveUserInfo() {
+
+    const user = getUserFromForm()
+
+    if (user.id){
+        fetch(`/user`, {
+            method: 'PUT',
+            body: JSON.stringify(user),
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then((res)=>{
+            if (res.ok){
+                renderUserHTM(user)
+                clearForm()
+                clearHTML()
+                getUsers()
+            }
+        });
+    } else {
+        fetch('/user', {
+            method: 'POST',
+            body: JSON.stringify(user),
+        })
+        .then((res)=>{
+            if (res.ok){
+                renderUserHTM(user)
+                clearForm()
+            }
+        });
+    }
+    deleteDataOnLocalStorage()
+    goToTable()
+}
+
+function getUserFromForm() {
+
+    setHtmlElementUserForm()
+
+    return {
+        id: userForm.elements['id'].value,
+        fullName: userForm.elements['fullname'].value,
+		birthday: userForm.elements['birthday'].value,
+		profession: userForm.elements['profession'].value,
+		address: userForm.elements['address'].value,
+		country: userForm.elements['country'].value,
+		shortInfo: userForm.elements['short-info'].value,
+		fullInfo: userForm.elements['full-info'].value, 
+    }
+}
+
+function renderUserHTM(user) {
+    const userValueRenderHtml = generateUserHTML(user);
+
+    usersTable.insertAdjacentHTML("beforeend", userValueRenderHtml);
 }
 
 function onUsersTableClick(e) {
@@ -113,38 +179,40 @@ function onUsersTableClick(e) {
     const id = user.dataset.id;
 
     if (user) {
-        if (e.target.classList.contains(EDIT_BTN_CLASS)) {
-            toggleCreateTable()
+        if (e.target.classList.contains('editBtn')) {
+            goToUserForm(id)
             getSingleUser(id)
                 .then((user) => {
-                    changeUser(user)
+                    setUserData(user)
                 })
         }
-        if (e.target.classList.contains(DELETE_BTN_CLASS)) {
+        if (e.target.classList.contains('deleteBtn')) {
             deleteUser(id)
-                .then(() => {
-                    const userById = usersList.findIndex(user => user.id === id) || {}
-                    usersList.splice(userById, 1);
-                })
                 .then(() => {
                     clearHTML()   
                 })
                 .then(() => {
-                    showUsersList(usersList);
+                    getUsers();
                 })
-
         }
     }
 }
 
-function changeUser(user){
-    addForm.elements['id'].value = user.id
-    addForm.elements['fullname'].value = user.fullName
-    addForm.elements['birthday'].value = user.birthday
-    addForm.elements['profession'].value = user.profession
-    addForm.elements['address'].value = user.address
-    addForm.elements['short-info'].value = user.shortInfo
-    addForm.elements['full-info'].value = user.fullInfo
+function getUserBySelector(el) {
+    return el.closest('.user');
+}
+
+
+function setUserData(user){
+    setHtmlElementUserForm()
+
+    userForm.elements['id'].value = user.id
+    userForm.elements['fullname'].value = user.fullName
+    userForm.elements['birthday'].value = user.birthday
+    userForm.elements['profession'].value = user.profession
+    userForm.elements['address'].value = user.address
+    userForm.elements['short-info'].value = user.shortInfo
+    userForm.elements['full-info'].value = user.fullInfo
 }
 
 function getSingleUser(userId) {
@@ -165,26 +233,9 @@ function deleteUser(userId) {
     });
 }
 
-// function updateUser(userId, changas) {
-//     fetch(`/user?id=${userId}` , {
-//         method: 'PUT',
-//         body: JSON.stringify(changas)
-//     })
-//     .then(res => {
-//         return res.ok;
-//     });
-// }
-
-function getUserBySelector(el) {
-    return el.closest(USER_SELECTOR);
-}
-
-function toggleCreateTable() {
-    addForm.classList.toggle('users-edit-hidden')
-}
 
 function clearForm() {
-    addForm.reset()     
+    userForm.reset()     
 }
 
 function clearHTML() {
@@ -194,3 +245,16 @@ function clearHTML() {
     } while (tableRows[0])
 }
 
+function setDataOnLocalStorage(user) { 
+    if(!user.id){
+        localStorage.setItem('user', JSON.stringify(user))
+    }
+}
+
+function getDataOnLocalStorage() {
+    return JSON.parse(localStorage.getItem('user'))
+}
+
+function deleteDataOnLocalStorage() {
+    localStorage.removeItem('user')
+}

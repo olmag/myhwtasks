@@ -45,6 +45,10 @@ app.get("/", function(req, res) {
 	file.serve(req, res);
 });
 
+app.get("/user-form.html", function(req, res) {
+	file.serve(req, res);
+});
+
 app.get("/sample", function(req, res) {
 	res.send({
 		data: JSON.stringify(req.query)
