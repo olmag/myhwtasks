@@ -74,6 +74,7 @@
   text-align: center;
   border-spacing: 0;
 }
+
 #users-table tr:nth-child(odd) {
   background: #ccc;
 }

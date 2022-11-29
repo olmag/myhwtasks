@@ -4,10 +4,9 @@
     <meta charset="UTF-8">
     <title>DOM && BOM 🙌.</title>
     <link rel="stylesheet" href="./css/theme.css">
-
 </head>
 <body>
-<form id="users-edit" class="users-edit users-edit-hidden">
+<form id="users-edit" class="users-edit">
     <h2>Create/Edit user</h2>
     
     <input type="hidden" name="id" id="id">
@@ -44,29 +43,7 @@
     </button>
     <button type="button" class="btn btn-cancel" id="cancel">Cancel</button>
 </form>
-<h2 style="text-align: center;">
-    <span style="text-transform: uppercase;">Users list</span> 
-    <button class="btn btn-new" id="create">Create user</button>
-</h2>
-
-<div id="details"></div>
-<table id="users-table">
-    <thead>
-        <tr>
-            <th>Full name</th>
-            <th>Profession</th>
-            <th>Short info</th>
-            <th>Options</th>
-        </tr>
-    </thead>
-    <tbody id="users-table-list">
-
-    </tbody>
-    
-
-</table>
-
 <script src="./js/jquery-3.1.1.min.js"></script>
-<script src="./js/main.js"></script>
+<script src="./js/user-form.js"></script>
 </body>
 </html>
